@@ -1,0 +1,23 @@
+{
+    "name": "rplip/okanban",
+    "description": "A trello like project",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "rplip",
+            "email": "romfum@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "altorouter/altorouter": "^1.2",
+        "symfony/var-dumper": "^4.3",
+        "benoclock/alto-dispatcher": "^1.0"
+    },
+    "autoload": {
+        "psr-4": { 
+            "Okanban\\": "app/"
+        }
+    }
+}
