@@ -1,126 +1,60 @@
-# Backend :heart_eyes:
+# Frontend
 
-Ce qui est bien avec l'architecture de notre code produit en saison 5, c'est qu'on a presque tout codé avec des objets.  
-On peut assez facilement réutiliser ce code dans d'autres projets.
+Ce dépôt sera ton dépôt côté **Front** pour toute la saison.
 
-On est des fainéants (enfin j'espère) donc va se baser sur ce code :wink:
+Tu peux coder chaque journée dans une branche spécifique pour t'y retrouver (et potentiellement reprendre le code du prof).
 
-## Etapes
+## Code fourni
 
-La structure des répertoires a peut-être un peu changé par rapport à la saison 5.  
-Ce n'est pas grave, au contraire, cela correspond aux structures MVC les plus utilisées.  
-Les fichiers `.gitkeep` ne servent qu'à versionner les dossiers dans lesquelles ils se trouvent (_Git_ ne versionne que les fichiers, pas les dossiers)
+- utilise le [Framework CSS Bulma](https://bulma.io/)
+- donc la [documentation de Bulma](https://bulma.io/documentation/columns/) te sera utile :wink:
+- il y a un peu de Javascript Vanilla (cliques sur _ajouter une liste_)
 
-### #1 FrontController :gun:
+## Exercice du jour
 
-- le seul répertoire accédé par le navigateur est le répertoire `public`
-- et notre fichier _FrontController_ est `public/index.php`
-- placer un fichier `.htaccess` dans `public` pour qu'il renvoit toutes les requêtes HTTP vers le fichier _FrontController_
-- on ne veut pas que le répertoire `app` soit accessible aux internautes
-  - créer un fichier `.htaccess` dans le dossier `app`
-  - coller ce code dans le fichier créé : `Deny from all`
+Comme tu le sais, oKanban, c'est un peu comme Trello mais _que c'est nous qu'on l'a fait_ :heart_eyes:
 
-### #2 Composer & AltoRouter :musical_keyboard:
+Aujourd'hui, on va apprivoiser **jQuery** avec quelques petites intéractions sympas, côté client (navigateur).
 
-- initialiser _Composer_ dans ce projet (`composer init`)
-- installer _AltoRouter_ via _Composer_ (`composer require author/dependency`)
-- on peut en profiter pour installer _var-dumper_
+### Etape 1 - jQuery
 
-### #3 .gitignore :see_no_evil:
+- remplacer le code Javascript _Vanilla_ existant par sa version **jQuery**
+- documentation [jQuery](https://api.jquery.com/)
 
-- ce fichier permet de définir les fichiers que _Git_ doit ignorer
-  - par exemple notre fichier de configuration spécifique à chaque machine et contenant des infos sensibles
-  - ou bien le répertoire `vendor` généré et rempli par _Composer_
+### Etape 2 - Modification du nom
 
-### #4 CoreModel :dancers:
+- afficher le formulaire de modification du nom lors du double-clic sur le nom d'une liste
 
-- classe "mère" de chaque classe _Model_
-- permet de regrouper méthodes et propriétés utiles pour tous les _Models_
-- coder la classe dans le dossier `app/Models`
+<details><summary>Plan</summary>
 
-### #5 CoreController :older_woman:
-
-- classe "mère" de chaque classe _Controller_
-- permet de regrouper méthodes et propriétés utiles pour tous les _Controllers_
-- coder la classe dans le dossier `app/Controllers`
-
-### #6 API = JSON :ear:
-
-- le backend va afficher des données encodées en JSON
-- donc la méthode `show` qui permettait d'afficher du code HTML sera peu utile
-- on va se créer une méthode `showJson()` :
-  - dans quelle classe on place cette méthode pour qu'elle soit disponible à tous les _Controllers_ ? :smiling_imp:
-  - premier paramètre `$data`, la donnée à convertir et afficher
-  - envoyer les entêtes HTTP permettant de définir le type `JSON`
-  - envoyer les entêtes HTTP autorisant les accès depuis n'importe quel domaine (_CORS_)
-
-<details><summary>Code de la méthode showJson()</summary>
-
-```php
-<?php
-
-// ...
-
-/**
-* Méthode permettant d'afficher/retourner un JSON à l'appel Ajax effectué
-*
-* @param mixed $data
-*/
-protected function showJson($data)
-{
-    // Autorise l'accès à la ressource depuis n'importe quel autre domaine
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Credentials: true');
-    // Dit au navigateur que la réponse est au format JSON
-    header('Content-Type: application/json');
-    // La réponse en JSON est affichée
-    echo json_encode($data);
-}
-
-// ...
-
-```
+- intercepter l'évènement `dblclick` sur le nom des listes
+- cacher l'élément lié à l'event (`evt.currentTarget`)
+- récupérer l'élément `<form>` "suivant" avec jQuery
+- afficher cet élément
 
 </details>
 
-### #7 DBData :floppy_disk:
+### Etape 3 - Ajouter le bouton d'ajout avec jQuery
 
-- en fait non, cette fois, on va voir une autre façon de regrouper les requêtes à la base de données
-- pour les plus curieux : https://www.culttt.com/2014/06/18/whats-difference-active-record-data-mapper/
-- pour les moins curieux : on verra ça en cours :wink:
+- commenter les lignes HTML correspondant au bouton `Ajouter une liste`
+- générer ce bouton en Javascript avec **jQuery** au chargement de la page
+- pour créer un élément `<div>` avec jQuery, il faut :
+    - écrire `$('<div>')`
+    - stocker l'élément dans une variable `var $maDiv = $('<div>');`
+    - ajouter un classe si on le souhaite `$maDiv.addClass('toto');`
+    - enfin, l'ajouter dans le DOM, dans un élément choisi (ciblé) :
+        - 1ère façon : `$('#idDestination').append($maDiv);`
+        - 2ème façon : `$maDiv.appendTo('#idDestination');`
 
-### #8 Fichier de config :bow:
+<details><summary>Plan</summary>
 
-- créer le fichier
-- placer les données nécessaires à la connexion à la base de données
-- créer la version "dist"
+- dans `app.init`, appeler une nouvelle méthode de app : `addListAddingButton`
+- cette méthode contiendra tout le code nécessaire à la création du bouton
+- créer chaque élément (avec leurs classes) composant le bouton individuellement, et les stocker dans des variables
+- utiliser `append()` ou `appendTo` pour ajouter un élément dans un autre
+    - exemple : `$monSpan.appendTo($maDiv)` où `$monSpan` est un élément `<span>` créé en jQuery, et `$maDiv` est un élément `<div>` créé en jQuery
+    - donc on n'ajoute rien dans le DOM pour l'instant
+- une fois les éléments intégrés dans leur "parent", on peut ajouter l'élément qui contient tous les autres (`<div class="column">`), dans le DOM
+- s'il y a une interception d'évènement sur ce bouton "Ajouter une liste", il faut donc que le bouton soit créé avant que l'interception d'évènement ne soit configurée
 
-### #9 Inclure les classes :loudspeaker:
-
-- dans le _FrontController_
-- inclure les classes utiles, dans le bon ordre :wink:
-- ne pas oublier _Composer_ :wink:
-
-### #10 Classe Application
-
-- déclare les routes
-- dispatch chaque requête HTTP vers la bonne méthode du bon controleur (méthode `run`)
-
-:raised_hand: **Halte** !  
-On s'arrête là. La suite, c'est à faire en autonomie après le cours :tada:
-
-### #11 404
-
-- gérer correctement les 404
-- créer et utiliser un _Controller_ `ErrorController`
-
-### #12 Views
-
-- créer les _views_ permettant d'afficher la page d'accueil et la page 404
-
-### #13 :thinking:
-
-- il reste des choses à faire ?
-  - c'est possible en effet
-  - on peut toujours améliorer notre code (amélioration continue = agilité :boom:)
-  - alors faisons-le :tada:
+</details>
